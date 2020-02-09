@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="shortcut icon" href="favicon.ico"/>
+    <link rel="shortcut icon" href="img/favicon.ico"/>
     <title>打地鼠小遊戲</title>
     <style>
         /* freepik ; google font*/
@@ -49,19 +49,19 @@
     <div class="content">
         <!-- (div.row>img:S*3)*3+div.control>(div>span#time+btn+span#combo)+hr+b+p+hr -->
         <div class="row">
-            <img src="yellow.png" class="cell" title="yellow" onclick="getcount(0)">
-            <img src="yellow.png" class="cell" title="yellow" onclick="getcount(1)">
-            <img src="yellow.png" class="cell" title="yellow" onclick="getcount(2)">
+            <img src="img/yellow.png" class="cell" title="yellow" onclick="getcount(0)">
+            <img src="img/yellow.png" class="cell" title="yellow" onclick="getcount(1)">
+            <img src="img/yellow.png" class="cell" title="yellow" onclick="getcount(2)">
         </div>
         <div class="row">
-            <img src="yellow.png" class="cell" title="yellow" onclick="getcount(3)">
-            <img src="yellow.png" class="cell" title="yellow" onclick="getcount(4)">
-            <img src="yellow.png" class="cell" title="yellow" onclick="getcount(5)">
+            <img src="img/yellow.png" class="cell" title="yellow" onclick="getcount(3)">
+            <img src="img/yellow.png" class="cell" title="yellow" onclick="getcount(4)">
+            <img src="img/yellow.png" class="cell" title="yellow" onclick="getcount(5)">
         </div>
         <div class="row">
-            <img src="yellow.png" class="cell" title="yellow" onclick="getcount(6)">
-            <img src="yellow.png" class="cell" title="yellow" onclick="getcount(7)">
-            <img src="yellow.png" class="cell" title="yellow" onclick="getcount(8)">
+            <img src="img/yellow.png" class="cell" title="yellow" onclick="getcount(6)">
+            <img src="img/yellow.png" class="cell" title="yellow" onclick="getcount(7)">
+            <img src="img/yellow.png" class="cell" title="yellow" onclick="getcount(8)">
         </div>        
         <div class="control">
             <div class="msg">
@@ -132,13 +132,13 @@
                 },100);
             }
             else{  //確定該位置是黃色，可以進行紅色事件
-                target[siWhich].src="red.png";
+                target[siWhich].src="img/red.png";
                 target[siWhich].style.background="red";
                 target[siWhich].title="red";
                 target[siWhich].alt=siId;
 
                 beYellow[siId]=setTimeout(() => {  //red多久之後自己變回yellow(轉黃定時器)
-                    target[siWhich].src="yellow.png";
+                    target[siWhich].src="img/yellow.png";
                     target[siWhich].style.background=null;
                     target[siWhich].title="yellow";
                     target[siWhich].alt=null;
@@ -148,7 +148,7 @@
 
         function getcount(who){  //計分且將紅色變綠色 who=0~8
             if(target[who].title=="red" && flag==1){  //確定是遊戲中的紅色事件
-                target[who].src="green.png";
+                target[who].src="img/green.png";
                 target[who].style.background="green";
                 target[who].title="green";
 
@@ -160,7 +160,7 @@
                 target[who].alt=null;
 
                 setTimeout(() => { //green 1秒之後自己變回yellow
-                    target[who].src="yellow.png";
+                    target[who].src="img/yellow.png";
                     target[who].style.background=null;
                     target[who].title="yellow";
                 }, 1000);
