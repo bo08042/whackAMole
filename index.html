@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        /* freepik ; google font*/
+        body{
+            font-family: '微軟正黑體', sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+        .content{
+            display: flex;
+            flex-flow: column nowrap;
+            align-items: center;
+            justify-content: center;
+        }
+        .cell{
+            background: yellow;
+            border: 5px solid #6bd1eb;
+            cursor: pointer;
+            width: 100px;
+            height: 100px;
+        }
+        .control{
+            max-width: 350px;
+        }
+        .msg{
+            margin: 5px auto;
+            display: flex;
+            justify-content: space-around;
+            line-height: 2rem;
+        }
+        button{
+            width: 25%;
+        }
+        span{
+            width: 37%;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <!-- (div.row>img:S*3)*3+div.control>(div>span#time+btn+span#combo)+hr+b+p+hr -->
+        <div class="row">
+            <img src="yellow.png" class="cell" title="yellow" onclick="getcount(0)">
+            <img src="yellow.png" class="cell" title="yellow" onclick="getcount(1)">
+            <img src="yellow.png" class="cell" title="yellow" onclick="getcount(2)">
+        </div>
+        <div class="row">
+            <img src="yellow.png" class="cell" title="yellow" onclick="getcount(3)">
+            <img src="yellow.png" class="cell" title="yellow" onclick="getcount(4)">
+            <img src="yellow.png" class="cell" title="yellow" onclick="getcount(5)">
+        </div>
+        <div class="row">
+            <img src="yellow.png" class="cell" title="yellow" onclick="getcount(6)">
+            <img src="yellow.png" class="cell" title="yellow" onclick="getcount(7)">
+            <img src="yellow.png" class="cell" title="yellow" onclick="getcount(8)">
+        </div>        
+        <div class="control">
+            <div class="msg">
+                <span id="time">剩餘時間: 60s</span>
+                <button>遊戲開始</button>
+                <span id="combo">成績分數: 0</span>
+            </div>
+            <hr>
+            <b>遊戲說明</b>
+            <p>打地鼠遊戲，請點擊紅色圖片獲得分數(滿分100，亦可使用數字鍵1-9)</p>
+            <hr>
+        </div>
+    </div>
+    <script>
+        //初始化全域變數
+        var btn=document.getElementsByTagName('button')[0];
+        var time=document.getElementById('time');
+        var combo=document.getElementById('combo');
+        var target=document.getElementsByClassName('cell');
+
+        var flag=0; //判別遊戲狀況 停止=0，遊戲中=1
+        var sec=0,count=0;
+        var beYellow=new Array(); //到時候會存放所有紅色事件的轉黃定時器，陣列共有100個位置
+
+        btn.addEventListener('click',gamestart);
+
+
+        function gamestart(){  //遊戲開始
+            sec=60,count=0,flag=1;
+            time.textContent=`剩餘時間: ${sec}s`;
+            combo.textContent=`成績分數: ${count}`;
+            btn.removeEventListener('click',gamestart); //關閉btn，不要再讓人去按他，觸發多餘的gamestart()
+
+            let start=setInterval(() => {  //控制倒數以及遊戲區間的隔離(按鈕)
+                if(sec==0){ //當sec的值為0，會被if視為false
+                    clearInterval(start);
+                    flag=0;
+                    btn.addEventListener('click',gamestart); //開啟btn
+                }
+                else{
+                    sec--;
+                    time.textContent=`剩餘時間: ${sec}s`;
+                }
+            }, 1000);
+
+            for (let i=0; i<100; i++) {
+                //產生100組紅色事件
+                let ontime=Math.floor(Math.random()*57000);  //隨機1~57s；此處 0~56999豪秒(ms) 
+                let which=Math.floor(Math.random()*9);  //隨機0~8處
+                let delay=Math.floor(Math.random()*3)+2;  //隨機2~4秒
+
+                setTimeout(function(){
+                    showit(which,delay,i);
+                },ontime);
+            }
+
+        }
+
+        function showit(siWhich,siDelay,siId){  //在指定的siWhitch位置變成red事件
+            if (target[siWhich].title!="yellow") {  //你不是等待(yellow)狀態，就不要塞紅色
+                // let next=(siWhich==8)?0:siWhich+1;  //寫法1
+                // let next=(siWhich+1)%9; //寫法2，得到0~8
+                let next=Math.floor(Math.random()*9);  //重新指定一次位置
+
+                //直接執行showit(next,siDelay,siId);的話，可能會因為太快觸發而無限迴圈
+                setTimeout(function(){
+                    showit(next,siDelay,siId);
+                },100);
+            }
+            else{  //確定該位置是黃色，可以進行紅色事件
+                target[siWhich].src="red.png";
+                target[siWhich].style.background="red";
+                target[siWhich].title="red";
+                target[siWhich].alt=siId;
+
+                beYellow[siId]=setTimeout(() => {  //red多久之後自己變回yellow(轉黃定時器)
+                    target[siWhich].src="yellow.png";
+                    target[siWhich].style.background=null;
+                    target[siWhich].title="yellow";
+                    target[siWhich].alt=null;
+                }, siDelay*1000);
+            }
+        }
+
+        function getcount(who){  //計分且將紅色變綠色 who=0~8
+            if(target[who].title=="red" && flag==1){  //確定是遊戲中的紅色事件
+                target[who].src="green.png";
+                target[who].style.background="green";
+                target[who].title="green";
+
+                count++;
+                combo.textContent=`成績分數: ${count}`;
+
+                id=target[who].alt;
+                clearTimeout(beYellow[id]); //清除原先路線上的轉黃定時器，避免遊戲節奏亂掉(黃色出現的時機不對)
+                target[who].alt=null;
+
+                setTimeout(() => { //green 1秒之後自己變回yellow
+                    target[who].src="yellow.png";
+                    target[who].style.background=null;
+                    target[who].title="yellow";
+                }, 1000);
+            }
+        }
+
+        document.onkeydown=keyboard;
+        function keyboard(){
+            // console.log(event.keyCode);
+            switch (event.keyCode) {
+                case 103: getcount(0);break;
+                case 104: getcount(1);break;
+                case 105: getcount(2);break;
+                case 100: getcount(3);break;
+                case 101: getcount(4);break;
+                case 102: getcount(5);break;
+                case 97: getcount(6);break;
+                case 98: getcount(7);break;
+                case 99: getcount(8);break;
+            }
+        }
+    </script>
+</body>
+</html>
